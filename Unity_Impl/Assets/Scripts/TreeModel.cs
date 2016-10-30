@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
-[System.Serializable]
-[CreateAssetMenu(fileName = "tree_", menuName = "TreeModel")]
-public class TreeModel : ScriptableObject
+public class TreeModel : MonoBehaviour
 {
     public Node<Vector3> root;
-    // texture, etc...
+    public GameObject leafPrefab;
 }
