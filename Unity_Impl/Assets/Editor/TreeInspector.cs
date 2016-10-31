@@ -37,11 +37,11 @@ public class TreeInspector : Editor
         Mesh mesh = gameObj.GetComponent<Mesh>();
 
         if (mesh)
-            pl.step_ms.boundingBox = mesh.bounds.size;
+            tree.boundingBox = mesh.bounds.size;
         else
-            pl.step_ms.boundingBox = new Vector3(1, 2, 1);
+            tree.boundingBox = new Vector3(1, 2, 1);
 
-        pl.step_ms.boundingBox = EditorGUILayout.Vector3Field("Bounding box", pl.step_ms.boundingBox);
+        tree.boundingBox = EditorGUILayout.Vector3Field("Bounding box", tree.boundingBox);
         pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
 
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
