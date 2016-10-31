@@ -12,46 +12,37 @@ public class TreeInspector : Editor
     static bool display_leaves;
     static bool display_texture;
 
-    Vector3 param_boundingBox;
+    static bool b_init = false;
+    static TreeGeneratorPipeline pl = null;
 
-    static int param_nb_it;
-    const int NB_IT_MIN = 1;
-    const int NB_IT_MAX = 100;
-
-    // space colonization ------
-    static int param_nb_markers;
-    static float param_theta;
-    static float param_r;
-    static float param_phi;
-    const int NB_MARKERS_MIN = 10;
-    const int NB_MARKERS_MAX = 1000;
-    const float THETA_MIN = 60;
-    const float THETA_MAX = 120;
-    const float R_MIN = 4;
-    const float R_MAX = 6;
-    const float PHI_MIN = 1.9f;
-    const float PHI_MAX = 2.1f;
-    // -------------------------
-
-    static float param_lambda;
+    /*static float param_lambda;
     static float param_alpha;
     static float param_epsilon;
     static float param_eta;
-    static int param_n;
+    static int param_n;*/
 
     public override void OnInspectorGUI()
     {
+        if (!b_init) {
+            pl = new TreeGeneratorPipeline();
+            pl.step_ms = new TreeGeneratorMS();
+            pl.step_sc = new TreeGeneratorSC();
+            pl.step_bh = new TreeGeneratorBH();
+            pl.step_sa = new TreeGeneratorSA();
+            pl.step_bw = new TreeGeneratorBW();
+        }
+
         TreeModel tree = (TreeModel)target;
         GameObject gameObj = tree.gameObject;
         Mesh mesh = gameObj.GetComponent<Mesh>();
 
         if (mesh)
-            param_boundingBox = mesh.bounds.size;
+            pl.step_ms.boundingBox = mesh.bounds.size;
         else
-            param_boundingBox = new Vector3(1, 2, 1);
+            pl.step_ms.boundingBox = new Vector3(1, 2, 1);
 
-        param_boundingBox = EditorGUILayout.Vector3Field("Bounding box", param_boundingBox);
-        param_nb_it = EditorGUILayout.IntSlider("Number of iterations", param_nb_it, NB_IT_MIN, NB_IT_MAX);
+        pl.step_ms.boundingBox = EditorGUILayout.Vector3Field("Bounding box", pl.step_ms.boundingBox);
+        pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
 
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
 
@@ -63,10 +54,10 @@ public class TreeInspector : Editor
 
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
 
-        param_nb_markers = EditorGUILayout.IntSlider("Number of markers", param_nb_markers, NB_MARKERS_MIN, NB_MARKERS_MAX);
-        param_theta = EditorGUILayout.Slider("theta", param_theta, THETA_MIN, THETA_MAX);
+        pl.step_ms.nb_markers = EditorGUILayout.IntSlider("Number of markers", pl.step_ms.nb_markers, TreeGeneratorMS.NB_MARKERS_MIN, TreeGeneratorMS.NB_MARKERS_MAX);
+        /*param_theta = EditorGUILayout.Slider("theta", param_theta, THETA_MIN, THETA_MAX);
         param_r = EditorGUILayout.Slider("r", param_r, R_MIN, R_MAX);
-        param_phi = EditorGUILayout.Slider("phi", param_phi, PHI_MIN, PHI_MAX);
+        param_phi = EditorGUILayout.Slider("phi", param_phi, PHI_MIN, PHI_MAX);*/
 
         // ...
 
@@ -112,8 +103,7 @@ public class TreeInspector : Editor
         // TODO : remove leaves into the scene (child gameobjects)
         // -------------
 
-        TreeGeneratorPipeline process = new TreeGeneratorPipeline();
-        Mesh outputMesh = process.execute();
+        Mesh outputMesh = pl.execute();
 
         string outputFilename = "Assets/Meshes/tree_mesh_01.asset"; // TODO : dynamic path
         AssetDatabase.CreateAsset(outputMesh, outputFilename);

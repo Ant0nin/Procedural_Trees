@@ -2,13 +2,17 @@
 using UnityEditor;
 using System.Collections;
 
-public class TreeGeneratorPipeline {
+public class TreeGeneratorPipeline
+{
+    public int nb_it;
+    public const int NB_IT_MIN = 1;
+    public const int NB_IT_MAX = 100;
 
-    public TreeGeneratorMS step0;
-    public TreeGeneratorSC step1;
-    public TreeGeneratorBH step2;
-    public TreeGeneratorSA step3;
-    public TreeGeneratorBW step4;
+    public TreeGeneratorMS step_ms;
+    public TreeGeneratorSC step_sc;
+    public TreeGeneratorBH step_bh;
+    public TreeGeneratorSA step_sa;
+    public TreeGeneratorBW step_bw;
 
     public TreeGeneratorPipeline()
     {
