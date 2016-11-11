@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TreeGeneratorPipeline
 {
@@ -8,18 +9,22 @@ public class TreeGeneratorPipeline
     public const int NB_IT_MIN = 1;
     public const int NB_IT_MAX = 100;
 
-    public TreeGeneratorMS step_ms;
-    public TreeGeneratorSC step_sc;
-    public TreeGeneratorBH step_bh;
-    public TreeGeneratorSA step_sa;
-    public TreeGeneratorBW step_bw;
+    private List<TreePipelineComponent> m_steps;
 
-    public TreeGeneratorPipeline()
+    public TreeGeneratorPipeline(params TreePipelineComponent[] steps_)
     {
-        // ...
+        m_steps = new List<TreePipelineComponent>();
+        foreach (TreePipelineComponent step in steps_)
+            m_steps.Add(step);
     }
 
-    public Mesh execute() {
+    public Mesh execute(TreeModel tree) {
+
+        Vector3 boundingBox = tree.boundingBox;
+        tree = new TreeModel(boundingBox); // Reset
+
+        foreach (TreePipelineComponent step in m_steps)
+            step.execute(tree);
 
         // just a simple test => create a quad : ----
         Mesh mesh = new Mesh();

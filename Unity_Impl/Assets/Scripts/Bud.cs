@@ -10,5 +10,7 @@ public class Bud
 
     public Bud(Vector3 position) {
         this.pos = position;
+        targetMarkers = new List<Vector3>();
+        dir = new Vector3(0, 1, 0);
     }
 }
