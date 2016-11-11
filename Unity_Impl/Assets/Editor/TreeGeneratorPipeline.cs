@@ -21,7 +21,7 @@ public class TreeGeneratorPipeline
     public Mesh execute(TreeModel tree) {
 
         Vector3 boundingBox = tree.boundingBox;
-        tree = new TreeModel(boundingBox); // Reset
+        tree = ScriptableObject.CreateInstance<TreeModel>(); // Reset
 
         foreach (TreePipelineComponent step in m_steps)
             step.execute(tree);

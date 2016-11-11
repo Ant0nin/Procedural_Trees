@@ -4,7 +4,7 @@ using UnityEditor.AnimatedValues;
 using System.Collections;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(TreeModelBehavior))]
+[CustomEditor(typeof(TreeModel))]
 public class TreeInspector : Editor
 {
     bool display_boundingBox;
@@ -31,15 +31,12 @@ public class TreeInspector : Editor
             step_ms, step_sc/*, step_bh, step_sa, step_bw*/
         );
 
-        TreeModelBehavior mb = (TreeModelBehavior)target;
-        TreeModel tree = mb.treeModel;
-        if (tree == null)
-            tree = new TreeModel();
-        GameObject gameObj = mb.gameObject;
+        TreeModel tree = (TreeModel)target;
+        /*GameObject gameObj = mb.gameObject;
         Mesh mesh = mb.GetComponent<Mesh>();
 
         if (mesh)
-            tree.boundingBox = mesh.bounds.size;
+            tree.boundingBox = mesh.bounds.size;*/
 
         tree.boundingBox = EditorGUILayout.Vector3Field("Bounding box", tree.boundingBox);
         pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
@@ -66,9 +63,14 @@ public class TreeInspector : Editor
         }
     }
     
-    /*public void OnSceneGUI()
+    public void OnSceneGUI()
     {
-        if (display_leaves) {
+        TreeModel tree = (TreeModel)target;
+
+        foreach (Vector3 marker in tree.markers)
+            Gizmos.DrawSphere(marker, 0.1f);
+
+        /*if (display_leaves) {
             // ...
         }
         if (display_texture) {
@@ -82,16 +84,14 @@ public class TreeInspector : Editor
         }
         if (display_skeleton) {
             // ...
-        }
-    }*/
+        }*/
+    }
 
     public void OnButtonClick()
     {
-        TreeModelBehavior mb = (TreeModelBehavior)target;
-        TreeModel tree = mb.treeModel;
-        if (tree == null)
-            tree = new TreeModel();
-        GameObject gameObj = mb.gameObject;
+        TreeModel tree = (TreeModel)target;
+
+        /*GameObject gameObj = mb.gameObject;
         MeshFilter meshFilter = gameObj.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = gameObj.GetComponent<MeshRenderer>();
 
@@ -101,7 +101,7 @@ public class TreeInspector : Editor
         /*else if (meshFilter && meshFilter.sharedMesh)
             DestroyImmediate(meshFilter.sharedMesh, true);*/
 
-        if (!meshRenderer)
+        /*if (!meshRenderer)
             meshRenderer = gameObj.AddComponent<MeshRenderer>();
         // TODO : remove leaves into the scene (child gameobjects)
         // -------------
@@ -110,6 +110,6 @@ public class TreeInspector : Editor
 
         string outputFilename = "Assets/Meshes/tree_mesh_01.asset"; // TODO : dynamic path
         AssetDatabase.CreateAsset(outputMesh, outputFilename);
-        meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(outputFilename);
+        meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(outputFilename);*/
     }
 }
