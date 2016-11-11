@@ -8,6 +8,8 @@ public class Node<T> // generic
     public T value;
     public uint level;
 
+    public float Q;
+
     public Node(T value_) // only for root
     {
         value = value_;
