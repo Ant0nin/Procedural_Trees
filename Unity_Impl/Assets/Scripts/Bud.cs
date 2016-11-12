@@ -17,6 +17,7 @@ public class Bud
     public Vector3 optimalGrowth;
     public bool isNewAxis; // TODO : plus besoin car arbre binaire
     public BudState state;
+    public float branchWidth;
 
     //Ext. BH
     public float Q; //Quantité de lumière
