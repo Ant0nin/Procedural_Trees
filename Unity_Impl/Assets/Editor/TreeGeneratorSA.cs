@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class TreeGeneratorSA : TreePipelineComponent
 {
@@ -15,45 +16,39 @@ public class TreeGeneratorSA : TreePipelineComponent
 
     public void execute(TreeModel tree)
     {
-        foreach (Node<Bud> node in tree.skeleton.leaves)
+        List<Node<Bud>> leaves = tree.skeleton.leaves;
+
+        for (int i = leaves.Count; i >= 0; i--)
         {
+            Node<Bud> node = leaves[i];
             Bud bud = node.value;
-            switch (bud.state)
-            {
-                case BudState.NEW_METAMER:
-                    addMetamer(tree, node, true);
-                    break;
-                case BudState.FLOWER:
-                    // TODO : Remove from leaves
-                    break;
-                case BudState.DORMANT:
-                    addMetamer(tree, node, false);
-                    break;
-                case BudState.ABORT:
-                    // TODO : Remove from leaves
-                    break;
-            }
+
+            if (bud.state == BudState.NEW_METAMER)
+                addMetamers(leaves, node);
+            else
+                leaves.RemoveAt(i);
         }
     }
 
-    private void addMetamer(TreeModel tree, Node<Bud> currentNode, bool isNewAxis)
+    private void addMetamers(List<Node<Bud>> leaves, Node<Bud> currentNode)
     {
         Bud currentBud = currentNode.value;
 
-        Vector3 finalDirection = Vector3.Normalize(eta * tropismVec + epsilon * currentBud.optimalGrowth + currentBud.dir);
         float internodeLength = currentBud.l;
-        Vector3 newBudPosition = currentBud.pos + finalDirection * internodeLength;
+        Vector3 newMainBudPosition = currentBud.pos + currentBud.dir * internodeLength;
+        currentBud.dir = Vector3.Normalize(eta * tropismVec + epsilon * currentBud.optimalGrowth + currentBud.dir);
+        Vector3 newLateralBudPosition = currentBud.pos + currentBud.dir * internodeLength;
 
-        Bud newBud = new Bud(newBudPosition, isNewAxis);
-        Node<Bud> newNode = new Node<Bud>(currentNode, newBud);
+        Bud newLateralBud = new Bud(newLateralBudPosition, true);
+        Node<Bud> newLateralNode = new Node<Bud>(currentNode, newLateralBud);
+        currentNode.lateral = newLateralNode;
 
-        // TODO : lateral and main shouldn't be null
-        if (isNewAxis)
-            currentNode.lateral = newNode;
-        else
-            currentNode.main = newNode;
+        Bud newMainBud = new Bud(newMainBudPosition, true);
+        Node<Bud> newMainNode = new Node<Bud>(currentNode, newMainBud);
+        currentNode.main = newMainNode;
 
-        tree.skeleton.leaves.Remove(currentNode);
-        tree.skeleton.leaves.Add(newNode);
+        leaves.Remove(currentNode);
+        leaves.Add(newLateralNode);
+        leaves.Add(newMainNode);
     }
 }
