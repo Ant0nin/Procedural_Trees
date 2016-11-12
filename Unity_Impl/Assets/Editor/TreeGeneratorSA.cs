@@ -43,7 +43,7 @@ public class TreeGeneratorSA : TreePipelineComponent
         Node<Bud> newLateralNode = new Node<Bud>(currentNode, newLateralBud);
         currentNode.lateral = newLateralNode;
 
-        Bud newMainBud = new Bud(newMainBudPosition, true);
+        Bud newMainBud = new Bud(newMainBudPosition, false);
         Node<Bud> newMainNode = new Node<Bud>(currentNode, newMainBud);
         currentNode.main = newMainNode;
 
