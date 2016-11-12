@@ -15,7 +15,7 @@ public class Bud
     public Vector3 dir;
     public List<Vector3> targetMarkers;
     public Vector3 optimalGrowth;
-    public bool isNewAxis;
+    public bool isNewAxis; // TODO : plus besoin car arbre binaire
     public BudState state;
 
     //Ext. BH
@@ -24,7 +24,7 @@ public class Bud
     public int n; //Nombre de métamers produit par le bourgeon
     public float l; //Longeur des internodes (= v/n)
 
-    public Bud(Vector3 position, bool isNewAxis_ = false) {
+    public Bud(Vector3 position, bool isNewAxis_) {
         isNewAxis = isNewAxis_;
         this.pos = position;
         targetMarkers = new List<Vector3>();

@@ -44,7 +44,7 @@ public class TreeGeneratorBH : TreePipelineComponent
             distributeEnergy(N.main, N.main.value.v);
             distributeEnergy(N.lateral, N.lateral.value.v);
 
-        } else if(N.lateral == null) { //Continuité de la brache -> transmission simple
+        } else if(N.lateral == null) { //Continuité de la branche -> transmission simple
             N.main.value.setEnergy(v);
             distributeEnergy(N.main, N.main.value.v);
         }
@@ -56,7 +56,5 @@ public class TreeGeneratorBH : TreePipelineComponent
         float vBase = alpha * accumulateLight(tree.skeleton.root);
         //Seconde passe
         distributeEnergy(tree.skeleton.root, vBase);
-
-        throw new NotImplementedException();
     }
 }

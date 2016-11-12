@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class Node<T> // generic
 {
     public Node<T> parent = null;
-    //public List<Node<T>> childs;
     public Node<T> main;
     public Node<T> lateral;
 
