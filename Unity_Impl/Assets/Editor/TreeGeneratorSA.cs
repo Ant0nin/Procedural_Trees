@@ -26,37 +26,52 @@ public class TreeGeneratorSA : TreePipelineComponent
             switch (bud.state)
             {
                 case BudState.NEW_METAMER:
-                    addMetamers(ref leaves, node);
+                    growBranch(ref leaves, ref node);
+                    addMetamer(ref leaves, ref node);
                     break;
                 case BudState.DORMANT:
-                    addMetamers(ref leaves, node);
-                    break;
-                default:
-                    leaves.RemoveAt(i);
+                    growBranch(ref leaves, ref node);
                     break;
             }
+
+            leaves.RemoveAt(i);
         }
     }
 
-    private void addMetamers(ref List<Node<Bud>> leaves, Node<Bud> currentNode)
+    private void addMetamer(ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
     {
         Bud currentBud = currentNode.value;
-
         float internodeLength = currentBud.l;
-        Vector3 newMainBudPosition = currentBud.pos + currentBud.dir * internodeLength;
-        currentBud.dir = Vector3.Normalize(eta * tropismVec + epsilon * currentBud.optimalGrowth + currentBud.dir);
-        Vector3 newLateralBudPosition = currentBud.pos + currentBud.dir * internodeLength;
+
+        Vector3 dir = Vector3.Normalize(eta * tropismVec + epsilon * currentBud.optimalGrowth + currentBud.dir);
+        Vector3 newLateralBudPosition = currentBud.pos + dir * internodeLength;
 
         Bud newLateralBud = new Bud(newLateralBudPosition, true);
         Node<Bud> newLateralNode = new Node<Bud>(currentNode, newLateralBud);
         currentNode.lateral = newLateralNode;
 
-        Bud newMainBud = new Bud(newMainBudPosition, false);
-        Node<Bud> newMainNode = new Node<Bud>(currentNode, newMainBud);
-        currentNode.main = newMainNode;
-
-        leaves.Remove(currentNode);
         leaves.Add(newLateralNode);
-        leaves.Add(newMainNode);
+    }
+
+    private void growBranch(ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
+    {
+        Bud currentBud = currentNode.value;
+        Vector3 dir = currentBud.dir;
+        float length = currentBud.l;
+        int it_number = currentBud.n;
+
+        Node<Bud> node = currentNode;
+
+        for (int i = 1; i < it_number; i++)
+        {
+            Node<Bud> previousNode = node;
+            Bud previousBud = previousNode.value;
+            Vector3 position = previousBud.pos + dir * length;
+            Bud bud = new Bud(position, false);
+            node = new Node<Bud>(previousNode, bud);
+            previousNode.main = node;
+        }
+
+        leaves.Add(node);
     }
 }
