@@ -10,23 +10,23 @@ public class TreeGeneratorBH : TreePipelineComponent
     public float Q = 10;
 
     //Accumule la lumière recue par les bourgeons de l'arbre dans chaque noeud puis à la base de celui ci.
-    private float accumulateLight(Node<Bud> N) {
+    private float accumulateLight(ref Node<Bud> N) {
         float lightQtt = 0;
 
         if (N.isLeaf())
             lightQtt = Q;
         else {
             if (N.main!=null)
-                lightQtt += accumulateLight(N.main);
+                lightQtt += accumulateLight(ref N.main);
             if (N.lateral!=null)
-                lightQtt += accumulateLight(N.lateral);
+                lightQtt += accumulateLight(ref N.lateral);
         }
 
         N.value.Q = lightQtt;
         return lightQtt;
     }
 
-    private void distributeEnergy(Node<Bud> N, float v) {
+    private void distributeEnergy(ref Node<Bud> N, float v) {
         if(N.lateral != null && N.main != null) {
             float Qm = N.main.value.Q;
             float Ql = N.lateral.value.Q;
@@ -41,20 +41,20 @@ public class TreeGeneratorBH : TreePipelineComponent
                 N.lateral.value.state = BudState.NEW_METAMER;
             }
 
-            distributeEnergy(N.main, N.main.value.v);
-            distributeEnergy(N.lateral, N.lateral.value.v);
+            distributeEnergy(ref N.main, N.main.value.v);
+            distributeEnergy(ref N.lateral, N.lateral.value.v);
 
         } else if(N.lateral == null) { //Continuité de la branche -> transmission simple
-            N.main.value.setEnergy(v);
-            distributeEnergy(N.main, N.main.value.v);
+            N.main.value.setEnergy(v); // TODO : runtime error here !
+            distributeEnergy(ref N.main, N.main.value.v);
         }
     }
 
     public void execute(ref TreeModel tree)
     {
         //Première passe
-        float vBase = alpha * accumulateLight(tree.skeleton.root);
+        float vBase = alpha * accumulateLight(ref tree.skeleton.root);
         //Seconde passe
-        distributeEnergy(tree.skeleton.root, vBase);
+        distributeEnergy(ref tree.skeleton.root, vBase);
     }
 }
