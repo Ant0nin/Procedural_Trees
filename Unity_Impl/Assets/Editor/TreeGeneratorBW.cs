@@ -13,7 +13,7 @@ public class TreeGeneratorBW : TreePipelineComponent
         initialDiameter = 1f;
     }
 
-    public void execute(TreeModel tree)
+    public void execute(ref TreeModel tree)
     {
         Node<Bud> rootNode = tree.skeleton.root;
         foreach (Node<Bud> leaf in tree.skeleton.leaves) {

@@ -18,13 +18,12 @@ public class TreeGeneratorPipeline
             m_steps.Add(step);
     }
 
-    public Mesh execute(TreeModel tree) {
-
-        Vector3 boundingBox = tree.boundingBox;
-        tree = ScriptableObject.CreateInstance<TreeModel>(); // Reset
+    public void execute(ref TreeModel tree)
+    {
+        tree.reset();
 
         foreach (TreePipelineComponent step in m_steps)
-            step.execute(tree);
+            step.execute(ref tree);
 
         // just a simple test => create a quad : ----
         Mesh mesh = new Mesh();
@@ -58,8 +57,6 @@ public class TreeGeneratorPipeline
         uv[3] = new Vector2(1, 1);
         mesh.uv = uv;
         // ------------------------------------------
-
-        return mesh;
     }
 
 }

@@ -5,5 +5,5 @@ using System.Text;
 
 public interface TreePipelineComponent
 {
-    void execute(TreeModel tree);
+    void execute(ref TreeModel tree);
 }

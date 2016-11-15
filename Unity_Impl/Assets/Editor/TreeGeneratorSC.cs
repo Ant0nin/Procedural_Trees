@@ -32,7 +32,7 @@ public class TreeGeneratorSC : TreePipelineComponent
         phi = 0.2f;
     }
 
-    public void execute(TreeModel tree)
+    public void execute(ref TreeModel tree)
     {
         foreach (Node<Bud> node in tree.skeleton.leaves)
         {

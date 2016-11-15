@@ -11,7 +11,7 @@ public class TreeGeneratorMS : TreePipelineComponent
         nb_markers = 500;
     }
 
-    public void execute(TreeModel tree)
+    public void execute(ref TreeModel tree)
     {
         tree.markers = new List<Vector3>(nb_markers);
 

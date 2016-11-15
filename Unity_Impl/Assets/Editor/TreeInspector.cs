@@ -20,7 +20,7 @@ public class TreeInspector : Editor
     TreeGeneratorSA step_sa = null;
     TreeGeneratorBW step_bw = null;
 
-    public override void OnInspectorGUI()
+    public void OnEnable()
     {
         step_ms = new TreeGeneratorMS();
         step_sc = new TreeGeneratorSC();
@@ -28,9 +28,12 @@ public class TreeInspector : Editor
         step_sa = new TreeGeneratorSA();
         step_bw = new TreeGeneratorBW();
         pl = new TreeGeneratorPipeline(
-            step_ms, step_sc, step_bh, step_sa/*, step_bw*/
+            step_ms, step_sc/*, step_bh, step_sa, step_bw*/
         );
+    }
 
+    public override void OnInspectorGUI()
+    {
         TreeModel tree = (TreeModel)target;
         /*GameObject gameObj = mb.gameObject;
         Mesh mesh = mb.GetComponent<Mesh>();
@@ -65,10 +68,10 @@ public class TreeInspector : Editor
     
     public void OnSceneGUI()
     {
-        TreeModel tree = (TreeModel)target;
+        /*TreeModel tree = (TreeModel)target;
 
         foreach (Vector3 marker in tree.markers)
-            Gizmos.DrawSphere(marker, 0.1f);
+            Gizmos.DrawSphere(marker, 0.1f);*/
 
         /*if (display_leaves) {
             // ...
@@ -89,7 +92,10 @@ public class TreeInspector : Editor
 
     public void OnButtonClick()
     {
+        SerializedObject s_tree = serializedObject;
         TreeModel tree = (TreeModel)target;
+        pl.execute(ref tree);
+        s_tree.ApplyModifiedProperties();
 
         /*GameObject gameObj = mb.gameObject;
         MeshFilter meshFilter = gameObj.GetComponent<MeshFilter>();
@@ -108,8 +114,8 @@ public class TreeInspector : Editor
 
         Mesh outputMesh = pl.execute(tree);
 
-        string outputFilename = "Assets/Meshes/tree_mesh_01.asset"; // TODO : dynamic path
-        AssetDatabase.CreateAsset(outputMesh, outputFilename);
-        meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(outputFilename);*/
+        string outputFilename = "Assets/Resources/TreeData/tree_data_01.asset"; // TODO : dynamic path
+        AssetDatabase.CreateAsset(tree, outputFilename);
+        //meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(outputFilename);*/
     }
 }

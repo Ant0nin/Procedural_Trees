@@ -14,7 +14,7 @@ public class TreeGeneratorSA : TreePipelineComponent
         eta = 0.3f;
     }
 
-    public void execute(TreeModel tree)
+    public void execute(ref TreeModel tree)
     {
         List<Node<Bud>> leaves = tree.skeleton.leaves;
 
@@ -23,14 +23,22 @@ public class TreeGeneratorSA : TreePipelineComponent
             Node<Bud> node = leaves[i];
             Bud bud = node.value;
 
-            if (bud.state == BudState.NEW_METAMER)
-                addMetamers(leaves, node);
-            else
-                leaves.RemoveAt(i);
+            switch (bud.state)
+            {
+                case BudState.NEW_METAMER:
+                    addMetamers(ref leaves, node);
+                    break;
+                case BudState.DORMANT:
+                    addMetamers(ref leaves, node);
+                    break;
+                default:
+                    leaves.RemoveAt(i);
+                    break;
+            }
         }
     }
 
-    private void addMetamers(List<Node<Bud>> leaves, Node<Bud> currentNode)
+    private void addMetamers(ref List<Node<Bud>> leaves, Node<Bud> currentNode)
     {
         Bud currentBud = currentNode.value;
 

@@ -50,7 +50,7 @@ public class TreeGeneratorBH : TreePipelineComponent
         }
     }
 
-    public void execute(TreeModel tree)
+    public void execute(ref TreeModel tree)
     {
         //Première passe
         float vBase = alpha * accumulateLight(tree.skeleton.root);
