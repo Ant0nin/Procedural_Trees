@@ -18,13 +18,16 @@ public class Node<T> // generic
         lateral = null;
     }
 
-    public Node(Node<T> parent_, T value_)
+    public Node(ref Tree<T> belongsTo, Node<T> parent_, T value_)
     {
         parent = parent_;
         value = value_;
         level = parent.level + 1;
         main = null;
         lateral = null;
+
+        Node<T> me = this;
+        belongsTo.addInLevel(ref me);
     }
 
     public bool isLeaf() {

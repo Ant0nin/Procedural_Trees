@@ -26,11 +26,11 @@ public class TreeGeneratorSA : TreePipelineComponent
             switch (bud.state)
             {
                 case BudState.NEW_METAMER:
-                    growBranch(ref leaves, ref node);
-                    addMetamer(ref leaves, ref node);
+                    growBranch(ref tree.skeleton, ref leaves, ref node);
+                    addMetamer(ref tree.skeleton, ref leaves, ref node);
                     break;
                 case BudState.DORMANT:
-                    growBranch(ref leaves, ref node);
+                    growBranch(ref tree.skeleton, ref leaves, ref node);
                     break;
             }
 
@@ -38,7 +38,7 @@ public class TreeGeneratorSA : TreePipelineComponent
         }
     }
 
-    private void addMetamer(ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
+    private void addMetamer(ref Tree<Bud> skeleton, ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
     {
         Bud currentBud = currentNode.value;
         float internodeLength = currentBud.l;
@@ -47,13 +47,13 @@ public class TreeGeneratorSA : TreePipelineComponent
         Vector3 newLateralBudPosition = currentBud.pos + dir * internodeLength;
 
         Bud newLateralBud = new Bud(newLateralBudPosition, true);
-        Node<Bud> newLateralNode = new Node<Bud>(currentNode, newLateralBud);
+        Node<Bud> newLateralNode = new Node<Bud>(ref skeleton, currentNode, newLateralBud);
         currentNode.lateral = newLateralNode;
 
         leaves.Add(newLateralNode);
     }
 
-    private void growBranch(ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
+    private void growBranch(ref Tree<Bud> skeleton, ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
     {
         Bud currentBud = currentNode.value;
         Vector3 dir = currentBud.dir;
@@ -68,7 +68,7 @@ public class TreeGeneratorSA : TreePipelineComponent
             Bud previousBud = previousNode.value;
             Vector3 position = previousBud.pos + dir * length;
             Bud bud = new Bud(position, false);
-            node = new Node<Bud>(previousNode, bud);
+            node = new Node<Bud>(ref skeleton, previousNode, bud);
             previousNode.main = node;
         }
 
