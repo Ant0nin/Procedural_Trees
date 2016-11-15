@@ -5,7 +5,7 @@ public class Tree<T> // generic
 {
     public Node<T> root;
     public List<Node<T>> leaves;
-    private List<List<Node<T>>> levels;
+    public List<List<Node<T>>> levels;
 
     public Tree(Node<T> root_) {
         root = root_;
@@ -21,14 +21,5 @@ public class Tree<T> // generic
             levels.Add(new List<Node<T>>());
 
         levels[(int)node.level].Add(node);
-    }
-
-    public List<Node<T>> getLevel(int n) {
-        return levels[n];
-    }
-
-    public int getLevelsQuantity()
-    {
-        return levels.Count;
     }
 }

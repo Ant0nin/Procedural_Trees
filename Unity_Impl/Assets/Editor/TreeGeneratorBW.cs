@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class TreeGeneratorBW : TreePipelineComponent
 {
@@ -15,22 +16,31 @@ public class TreeGeneratorBW : TreePipelineComponent
 
     public void execute(ref TreeModel tree)
     {
-        Node<Bud> rootNode = tree.skeleton.root;
-        foreach (Node<Bud> leaf in tree.skeleton.leaves) {
-            Bud bud = leaf.value;
-            bud.branchWidth = initialDiameter;
+        float diameter = initialDiameter;
+
+        for(int i = tree.skeleton.levels.Count; i >= 0; i--)
+        {
+            List<Node<Bud>> list = tree.skeleton.levels[i];
+            for(int j = 0; j < list.Count; j++)
+            {
+                Node<Bud> node = list[j];
+                updateBranchWidth(ref node);
+            }
         }
-        // TODO : parcours du graph-tree en largeur, des feuilles jusqu'à la base
     }
 
-    private void updateBranchWidth(Node<Bud> baseNode)
+    private void updateBranchWidth(ref Node<Bud> baseNode)
     {
-        if (baseNode.isLeaf())
-            return;
-
         Bud currentBud = baseNode.value;
-        float lateralBudWidth = baseNode.lateral.value.branchWidth;
-        float mainBudWidth = baseNode.main.value.branchWidth;
-        currentBud.branchWidth = (float)( Math.Pow(lateralBudWidth, this.n) + Math.Pow(mainBudWidth, this.n) );
+
+        if (baseNode.isLeaf())
+            currentBud.branchWidth = initialDiameter;
+        else
+        {
+            float lateralBudWidth = (baseNode.lateral != null ? baseNode.lateral.value.branchWidth : 0f);
+            float mainBudWidth = (baseNode.main != null ? baseNode.main.value.branchWidth : 0f);
+            currentBud.branchWidth = (float)(Math.Pow(lateralBudWidth, this.n) + Math.Pow(mainBudWidth, this.n));
+        }
+
     }
 }
