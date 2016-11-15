@@ -59,6 +59,27 @@ public class TreeModelBehavior : MonoBehaviour
     void drawSkeleton()
     {
         Gizmos.color = Color.cyan;
+        drawChildBranchs(treeModel.skeleton.root);
+    }
+
+    void drawChildBranchs(Node<Bud> baseNode)
+    {
+        drawBranchIfExists(baseNode, baseNode.lateral);
+        drawBranchIfExists(baseNode, baseNode.main);
+    }
+
+    void drawBranchIfExists(Node<Bud> start, Node<Bud> end)
+    {
+        if (end != null)
+        {
+            if (!end.isLeaf())
+                drawChildBranchs(end);
+
+            Vector3 position_start = start.value.pos;
+            Vector3 position_end = end.value.pos;
+
+            Gizmos.DrawLine(position_start, position_end);
+        }
     }
 
 #endif

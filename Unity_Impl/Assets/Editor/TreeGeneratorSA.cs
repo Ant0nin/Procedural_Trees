@@ -38,7 +38,7 @@ public class TreeGeneratorSA : TreePipelineComponent
         }
     }
 
-    private void addMetamer(ref Tree<Bud> skeleton, ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
+    private void addMetamer(ref TreeStructure<Bud> skeleton, ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
     {
         Bud currentBud = currentNode.value;
         float internodeLength = currentBud.l;
@@ -53,7 +53,7 @@ public class TreeGeneratorSA : TreePipelineComponent
         leaves.Add(newLateralNode);
     }
 
-    private void growBranch(ref Tree<Bud> skeleton, ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
+    private void growBranch(ref TreeStructure<Bud> skeleton, ref List<Node<Bud>> leaves, ref Node<Bud> currentNode)
     {
         Bud currentBud = currentNode.value;
         Vector3 dir = currentBud.dir;

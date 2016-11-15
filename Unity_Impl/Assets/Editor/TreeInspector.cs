@@ -28,7 +28,7 @@ public class TreeInspector : Editor
         step_sa = new TreeGeneratorSA();
         step_bw = new TreeGeneratorBW();
         pl = new TreeGeneratorPipeline(
-            step_ms, step_sc, step_bh, step_sa, step_bw
+            step_ms, step_sc/*, step_bh, step_sa, step_bw*/
         );
     }
 

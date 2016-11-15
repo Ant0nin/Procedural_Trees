@@ -18,7 +18,7 @@ public class Node<T> // generic
         lateral = null;
     }
 
-    public Node(ref Tree<T> belongsTo, Node<T> parent_, T value_)
+    public Node(ref TreeStructure<T> belongsTo, Node<T> parent_, T value_)
     {
         parent = parent_;
         value = value_;

@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Tree<T> // generic
+public class TreeStructure<T> // generic
 {
     public Node<T> root;
     public List<Node<T>> leaves;
     public List<List<Node<T>>> levels;
 
-    public Tree(Node<T> root_) {
+    public TreeStructure(Node<T> root_) {
         root = root_;
         leaves = new List<Node<T>>();
         leaves.Add(root);

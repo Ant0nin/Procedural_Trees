@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class TreeModel : ScriptableObject
 {
     public Vector3 boundingBox;
-    public Tree<Bud> skeleton;
+    public TreeStructure<Bud> skeleton;
     public List<Vector3> markers;
     public GameObject leafPrefab;
 
@@ -16,7 +16,7 @@ public class TreeModel : ScriptableObject
         Vector3 budPosition = new Vector3(boundingBox.x / 2, boundingBox.y / 2, 0); // default seed position => bottom
         Bud bud = new Bud(budPosition, true);
         Node<Bud> root = new Node<Bud>(bud);
-        skeleton = new Tree<Bud>(root);
+        skeleton = new TreeStructure<Bud>(root);
     }
 
     public void OnEnable()

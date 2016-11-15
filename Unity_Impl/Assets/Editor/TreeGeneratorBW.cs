@@ -16,8 +16,6 @@ public class TreeGeneratorBW : TreePipelineComponent
 
     public void execute(ref TreeModel tree)
     {
-        float diameter = initialDiameter;
-
         for(int i = tree.skeleton.levels.Count; i >= 0; i--)
         {
             List<Node<Bud>> list = tree.skeleton.levels[i];
