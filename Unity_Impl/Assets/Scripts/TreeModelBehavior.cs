@@ -19,7 +19,7 @@ public class TreeModelBehavior : MonoBehaviour
         Gizmos.color = Color.yellow;
         foreach (Vector3 marker in treeModel.markers)
         {
-            Gizmos.DrawSphere(transform.position + marker, 0.02f); // TODO : need translation
+            Gizmos.DrawSphere(transform.position + marker, 0.02f);
         }
     }
 
@@ -74,9 +74,9 @@ public class TreeModelBehavior : MonoBehaviour
         {
             if (!end.isLeaf())
                 drawChildBranchs(end);
-
-            Vector3 position_start = start.value.pos;
-            Vector3 position_end = end.value.pos;
+ 
+            Vector3 position_start = start.value.pos + transform.position;
+            Vector3 position_end = end.value.pos + transform.position;
 
             Gizmos.DrawLine(position_start, position_end);
         }

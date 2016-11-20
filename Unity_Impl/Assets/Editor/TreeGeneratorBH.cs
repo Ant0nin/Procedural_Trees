@@ -4,8 +4,8 @@ using System;
 
 public class TreeGeneratorBH : TreePipelineComponent
 {
-    public float lambda;
-    public float alpha;
+    public float lambda = 0.5f;
+    public float alpha = 0.5f;
 
     public float Q = 10;
 
@@ -53,8 +53,6 @@ public class TreeGeneratorBH : TreePipelineComponent
 
     public void execute(ref TreeModel tree)
     {
-        alpha = 0.5f;
-        lambda = 0.5f;
         //Première passe
         float vBase = alpha * accumulateLight(ref tree.skeleton.root);
         //Seconde passe
