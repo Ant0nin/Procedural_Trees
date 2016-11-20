@@ -18,7 +18,7 @@ public class TreeGeneratorSA : TreePipelineComponent
     {
         List<Node<Bud>> leaves = tree.skeleton.leaves;
 
-        for (int i = leaves.Count; i >= 0; i--)
+        for (int i = leaves.Count-1; i >= 0; i--)
         {
             Node<Bud> node = leaves[i];
             Bud bud = node.value;

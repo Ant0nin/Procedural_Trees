@@ -16,7 +16,7 @@ public class TreeGeneratorBW : TreePipelineComponent
 
     public void execute(ref TreeModel tree)
     {
-        for(int i = tree.skeleton.levels.Count; i >= 0; i--)
+        for(int i = tree.skeleton.levels.Count - 1; i >= 0; i--)
         {
             List<Node<Bud>> list = tree.skeleton.levels[i];
             for(int j = 0; j < list.Count; j++)
