@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class TreeGeneratorPipeline
 {
     public int nb_it;
-    public const int NB_IT_MIN = 1;
+    public const int NB_IT_MIN = 5;
     public const int NB_IT_MAX = 100;
 
     private List<TreePipelineComponent> m_steps;
@@ -22,8 +22,9 @@ public class TreeGeneratorPipeline
     {
         tree.reset();
 
-        foreach (TreePipelineComponent step in m_steps)
-            step.execute(ref tree);
+        for(int i = 0; i < nb_it; i++)
+            foreach (TreePipelineComponent step in m_steps)
+                step.execute(ref tree);
 
         // just a simple test => create a quad : ----
         Mesh mesh = new Mesh();
