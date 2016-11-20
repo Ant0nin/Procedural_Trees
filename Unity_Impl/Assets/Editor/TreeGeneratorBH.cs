@@ -26,7 +26,8 @@ public class TreeGeneratorBH : TreePipelineComponent
         return lightQtt;
     }
 
-    private void distributeEnergy(ref Node<Bud> N, float v) {
+    private void distributeEnergy(ref Node<Bud> N) {
+        float v = N.value.v;
         if(N.lateral != null && N.main != null) {
             float Qm = N.main.value.Q;
             float Ql = N.lateral.value.Q;
@@ -41,20 +42,23 @@ public class TreeGeneratorBH : TreePipelineComponent
                 N.lateral.value.state = BudState.NEW_METAMER;
             }
 
-            distributeEnergy(ref N.main, N.main.value.v);
-            distributeEnergy(ref N.lateral, N.lateral.value.v);
+            distributeEnergy(ref N.main);
+            distributeEnergy(ref N.lateral);
 
-        } else if(N.lateral != null && N.lateral == null) { //Continuité de la branche -> transmission simple
-            N.main.value.setEnergy(v); // TODO : runtime error here !
-            distributeEnergy(ref N.main, N.main.value.v);
+        } else if(N.main != null && N.lateral == null) { //Continuité de la branche -> transmission simple
+            N.main.value.setEnergy(v);
+            distributeEnergy(ref N.main);
         }
     }
 
     public void execute(ref TreeModel tree)
     {
+        alpha = 0.5f;
+        lambda = 0.5f;
         //Première passe
         float vBase = alpha * accumulateLight(ref tree.skeleton.root);
         //Seconde passe
-        distributeEnergy(ref tree.skeleton.root, vBase);
+        tree.skeleton.root.value.setEnergy(vBase);
+        distributeEnergy(ref tree.skeleton.root);
     }
 }
