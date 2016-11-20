@@ -44,7 +44,7 @@ public class TreeGeneratorBH : TreePipelineComponent
             distributeEnergy(ref N.main, N.main.value.v);
             distributeEnergy(ref N.lateral, N.lateral.value.v);
 
-        } else if(N.lateral == null) { //Continuité de la branche -> transmission simple
+        } else if(N.lateral != null && N.lateral == null) { //Continuité de la branche -> transmission simple
             N.main.value.setEnergy(v); // TODO : runtime error here !
             distributeEnergy(ref N.main, N.main.value.v);
         }
