@@ -5,14 +5,9 @@ using System.Collections.Generic;
 
 public class TreeGeneratorSA : TreePipelineComponent
 {
-    public float epsilon;
-    public float eta;
-    private static Vector3 tropismVec = new Vector3(0,-1,0);
-
-    public TreeGeneratorSA() {
-        epsilon = 0.3f;
-        eta = 0.3f;
-    }
+    public float epsilon = 0.5f;    // pour direction optimale
+    public float eta = 0.2f;        // pour vecteur de tropisme
+    private static Vector3 tropismVec = new Vector3(0f,-1,0f); //!\\
 
     public void execute(ref TreeModel tree)
     {
@@ -34,7 +29,7 @@ public class TreeGeneratorSA : TreePipelineComponent
                     break;
             }
 
-            leaves.RemoveAt(i);
+            leaves.Remove(node);
         }
     }
 
@@ -43,13 +38,13 @@ public class TreeGeneratorSA : TreePipelineComponent
         Bud currentBud = currentNode.value;
         float internodeLength = currentBud.l;
 
-        Vector3 dir = Vector3.Normalize(eta * tropismVec + epsilon * currentBud.optimalGrowth + currentBud.dir);
+        Vector3 dir = Vector3.Normalize(eta * tropismVec + epsilon * currentBud.optimalGrowth + (1-eta-epsilon) * currentBud.dir);
         Vector3 newLateralBudPosition = currentBud.pos + dir * internodeLength;
 
         Bud newLateralBud = new Bud(newLateralBudPosition, true);
         Node<Bud> newLateralNode = new Node<Bud>(ref skeleton, currentNode, newLateralBud);
-        currentNode.lateral = newLateralNode;
 
+        currentNode.lateral = newLateralNode;
         leaves.Add(newLateralNode);
     }
 

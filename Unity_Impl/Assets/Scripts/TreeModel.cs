@@ -12,7 +12,7 @@ public class TreeModel : ScriptableObject
 
     public void reset()
     {
-        boundingBox = new Vector3(1, 2, 1); // default bounding box
+        boundingBox = new Vector3(2, 4, 2); // default bounding box
         Vector3 budPosition = new Vector3(boundingBox.x / 2, 0, boundingBox.z / 2); // default seed position => bottom
         Bud bud = new Bud(budPosition, true);
         Node<Bud> root = new Node<Bud>(bud);

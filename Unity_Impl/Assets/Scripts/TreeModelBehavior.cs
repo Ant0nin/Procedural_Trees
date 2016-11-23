@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TreeModelBehavior : MonoBehaviour
 {
@@ -59,27 +60,29 @@ public class TreeModelBehavior : MonoBehaviour
     void drawSkeleton()
     {
         Gizmos.color = Color.cyan;
-        drawChildBranchs(treeModel.skeleton.root);
-    }
+        TreeStructure<Bud> skeleton = treeModel.skeleton;
 
-    void drawChildBranchs(Node<Bud> baseNode)
-    {
-        drawBranchIfExists(baseNode, baseNode.lateral);
-        drawBranchIfExists(baseNode, baseNode.main);
-    }
-
-    void drawBranchIfExists(Node<Bud> start, Node<Bud> end)
-    {
-        if (end != null)
+        for (int i = 1; i < skeleton.levels.Count; i++) // la root est exclue car i initialisé à 1
         {
-            if (!end.isLeaf())
-                drawChildBranchs(end);
- 
-            Vector3 position_start = start.value.pos + transform.position;
-            Vector3 position_end = end.value.pos + transform.position;
-
-            Gizmos.DrawLine(position_start, position_end);
+            List<Node<Bud>> list = skeleton.levels[i];
+            for (int j = 0; j < list.Count; j++)
+            {
+                Node<Bud> node = list[j];
+                drawBranch(node);
+            }
         }
+
+    }
+
+    void drawBranch(Node<Bud> node)
+    {
+        Vector3 startPos = node.value.pos;
+        Vector3 endPos = node.parent.value.pos;
+
+        Vector3 position_start = startPos + transform.position;
+        Vector3 position_end = endPos + transform.position;
+
+        Gizmos.DrawLine(position_start, position_end);
     }
 
 #endif

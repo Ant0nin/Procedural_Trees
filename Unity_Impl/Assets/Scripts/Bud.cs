@@ -15,7 +15,7 @@ public class Bud
     public Vector3 dir;
     public List<Vector3> targetMarkers;
     public Vector3 optimalGrowth;
-    public bool isNewAxis; // TODO : plus besoin car arbre binaire
+    public bool isNewAxis;
     public BudState state;
     public float branchWidth;
 
@@ -37,6 +37,6 @@ public class Bud
     {
         v = e;
         n = (int)Math.Truncate(v);
-        l = v / n;
+        l = (v / n); //!\\
     }
 }

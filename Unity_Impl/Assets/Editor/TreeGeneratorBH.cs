@@ -1,62 +1,104 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class TreeGeneratorBH : TreePipelineComponent
 {
     public float lambda = 0.5f;
-    public float alpha = 0.5f;
+    public float alpha = 2f;
+    public float Q_leaf = 1;
 
-    public float Q = 10;
-
-    //Accumule la lumière recue par les bourgeons de l'arbre dans chaque noeud puis à la base de celui ci.
-    private float accumulateLight(ref Node<Bud> N) {
-        float lightQtt = 0;
+    // Evalue la lumière recue pour un bourgeon de l'arbre
+    private void evaluateLight(ref Node<Bud> N)
+    {
+        Bud bud = N.value;
+        Node<Bud> lateral = N.lateral;
+        Node<Bud> main = N.main;
 
         if (N.isLeaf())
-            lightQtt = Q;
-        else {
-            if (N.main!=null)
-                lightQtt += accumulateLight(ref N.main);
-            if (N.lateral!=null)
-                lightQtt += accumulateLight(ref N.lateral);
-        }
-
-        N.value.Q = lightQtt;
-        return lightQtt;
+            bud.Q = Q_leaf;
+        else
+            bud.Q = (lateral != null ? lateral.value.Q : 0f) + (main != null ? main.value.Q : 0f);
     }
 
-    private void distributeEnergy(ref Node<Bud> N) {
-        float v = N.value.v;
-        if(N.lateral != null && N.main != null) {
-            float Qm = N.main.value.Q;
-            float Ql = N.lateral.value.Q;
-            float d = (lambda * Qm) + (1 - lambda) * Ql;
+    // Evalue l'énergie pour les éventuelles branches adjacentes (main et lateral) du bourgeon traité
+    private void evaluateEnergy(ref Node<Bud> N)
+    {
+        Bud bud = N.value;
+        Node<Bud> lateral = N.lateral;
+        Node<Bud> main = N.main;
+        bool hasLateral = (lateral != null);
+        bool hasMain = (main != null);
+        float Ql = 0f;
+        float Qm = 0f;
 
-            N.main.value.setEnergy(v * lambda * Qm / d);
-            N.lateral.value.setEnergy(v * (1 - lambda) * Ql / d);
-            if (N.main.value.v > 0) {
-                N.main.value.state = BudState.NEW_METAMER;
+        if(hasLateral)
+            Ql = lateral.value.Q;
+        if(hasMain)
+            Qm = main.value.Q;
+
+        float d = (lambda * Qm) + (1 - lambda) * Ql;
+
+        if (hasLateral)
+        {
+            float e = (bud.v * (1 - lambda) * Ql) / d;
+            lateral.value.setEnergy(e);
+        }
+        if (hasMain)
+        {
+            float e = (bud.v * lambda * Qm) / d;
+            main.value.setEnergy(e);
+        }
+    }
+
+    private void evaluateState(ref Bud bud)
+    {
+        if (bud.v > 0)
+            bud.state = BudState.NEW_METAMER;
+    }
+
+    // Accumule la lumière de l'arbre, des feuilles vers la base
+    private void accumulateLight(ref TreeStructure<Bud> skeleton)
+    {
+        for (int i = skeleton.levels.Count - 1; i >= 0; i--)
+        {
+            List<Node<Bud>> list = skeleton.levels[i];
+            for (int j = 0; j < list.Count; j++)
+            {
+                Node<Bud> node = list[j];
+                evaluateLight(ref node);
             }
-            if (N.lateral.value.v > 0) {
-                N.lateral.value.state = BudState.NEW_METAMER;
+        }
+    }
+
+    // Accumule l'énergie de l'arbre, de la base vers les feuilles
+    private void distributeEnergy(ref TreeStructure<Bud> skeleton)
+    {
+        // On évalue d'abord la quantité d'énergie à la base de l'arbre
+        Bud rootBud = skeleton.root.value;
+        float vBase = alpha * rootBud.Q;
+        rootBud.setEnergy(vBase);
+
+        for (int i = 0; i < skeleton.levels.Count ; i++)
+        {
+            List<Node<Bud>> list = skeleton.levels[i];
+            for (int j = 0; j < list.Count; j++)
+            {
+                Node<Bud> node = list[j];
+                Bud bud = node.value;
+                evaluateState(ref bud);
+                evaluateEnergy(ref node);
             }
-
-            distributeEnergy(ref N.main);
-            distributeEnergy(ref N.lateral);
-
-        } else if(N.main != null && N.lateral == null) { //Continuité de la branche -> transmission simple
-            N.main.value.setEnergy(v);
-            distributeEnergy(ref N.main);
         }
     }
 
     public void execute(ref TreeModel tree)
     {
         //Première passe
-        float vBase = alpha * accumulateLight(ref tree.skeleton.root);
+        accumulateLight(ref tree.skeleton);
+
         //Seconde passe
-        tree.skeleton.root.value.setEnergy(vBase);
-        distributeEnergy(ref tree.skeleton.root);
+        distributeEnergy(ref tree.skeleton);
     }
 }
