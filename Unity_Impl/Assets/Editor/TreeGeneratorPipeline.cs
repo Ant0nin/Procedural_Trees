@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class TreeGeneratorPipeline
 {
     public int nb_it = 1;
-    public const int NB_IT_MIN = 1;
+    public const int NB_IT_MIN = 5;
     public const int NB_IT_MAX = 100;
 
     private List<TreePipelineComponent> m_steps;

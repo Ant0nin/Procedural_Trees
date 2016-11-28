@@ -27,9 +27,9 @@ public class TreeGeneratorSC : TreePipelineComponent
     }
 
     public TreeGeneratorSC() {
-        theta = 120;
-        r = 2f;
-        phi = 1f;
+        theta = 45;
+        r = 1.0f;
+        phi = 0.25f;
     }
 
     public void execute(ref TreeModel tree)
@@ -59,7 +59,7 @@ public class TreeGeneratorSC : TreePipelineComponent
                 if(distanceBetween <= r) // maybe in bud cone
                 {
                     Vector3 dirToMarker = Vector3.Normalize(vecBetween);
-                    float angleCosBetween = Vector3.Dot(dirToMarker, bud.dir);
+                    float angleCosBetween = Vector3.Dot(bud.dir, dirToMarker);
                     if (angleCosBetween > cos_theta) { // in bud cone
                         bud.targetMarkers.Add(marker);
                         directions.Add(dirToMarker);

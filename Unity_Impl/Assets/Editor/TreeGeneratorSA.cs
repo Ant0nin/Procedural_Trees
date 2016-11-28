@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class TreeGeneratorSA : TreePipelineComponent
 {
-    public float epsilon = 0.8f;    // pour direction optimale
-    public float eta = 0.2f;        // pour vecteur de tropisme
+    public float epsilon = 0.9f;    // pour direction optimale
+    public float eta = 0.0f;        // pour vecteur de tropisme
     private static Vector3 tropismVec = new Vector3(0f,-1f,0f);
 
     public void execute(ref TreeModel tree)
