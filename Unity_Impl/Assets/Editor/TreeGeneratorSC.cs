@@ -27,9 +27,9 @@ public class TreeGeneratorSC : TreePipelineComponent
     }
 
     public TreeGeneratorSC() {
-        theta = 90;
-        r = 3f;
-        phi = 1.5f;
+        theta = 120;
+        r = 2f;
+        phi = 1f;
     }
 
     public void execute(ref TreeModel tree)
@@ -53,7 +53,7 @@ public class TreeGeneratorSC : TreePipelineComponent
 
             foreach (Vector3 marker in tree.markers)
             {
-                Vector3 vecBetween = (marker - bud.pos);
+                Vector3 vecBetween = (bud.pos - marker);
                 float distanceBetween = vecBetween.magnitude;
 
                 if(distanceBetween <= r) // maybe in bud cone
