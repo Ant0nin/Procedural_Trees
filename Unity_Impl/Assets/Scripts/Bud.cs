@@ -37,6 +37,6 @@ public class Bud
     {
         v = e;
         n = (int)Math.Truncate(v);
-        l = (v / n); //!\\
+        l = (v / n);
     }
 }

@@ -21,13 +21,13 @@ public class TreeGeneratorSC : TreePipelineComponent
     {
         get { return (float)(180 * theta_rad / Math.PI); }
         set {
-            theta_rad = (float)(Math.PI * value / 180f);
+            theta_rad = (float)(Math.PI * value*0.5f / 180f);
             cos_theta = (float)Math.Cos(theta_rad);
         }
     }
 
     public TreeGeneratorSC() {
-        theta = 45;
+        theta = 100f;
         r = 1.0f;
         phi = 0.25f;
     }
