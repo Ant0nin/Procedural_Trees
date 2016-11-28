@@ -28,8 +28,8 @@ public class TreeGeneratorSC : TreePipelineComponent
 
     public TreeGeneratorSC() {
         theta = 90;
-        r = 5;
-        phi = 0.2f;
+        r = 3f;
+        phi = 1.5f;
     }
 
     public void execute(ref TreeModel tree)
@@ -45,10 +45,18 @@ public class TreeGeneratorSC : TreePipelineComponent
                 Vector3 vecBetween = (marker - bud.pos);
                 float distanceBetween = vecBetween.magnitude;
 
-                if (distanceBetween <= phi) { // in bud sphere
+                if (distanceBetween <= phi) // in bud sphere
+                { 
                     tree.markers.RemoveAt(i);
                 }
-                else if(distanceBetween <= r) // maybe in bud cone
+            }
+
+            foreach (Vector3 marker in tree.markers)
+            {
+                Vector3 vecBetween = (marker - bud.pos);
+                float distanceBetween = vecBetween.magnitude;
+
+                if(distanceBetween <= r) // maybe in bud cone
                 {
                     Vector3 dirToMarker = Vector3.Normalize(vecBetween);
                     float angleCosBetween = Vector3.Dot(dirToMarker, bud.dir);
