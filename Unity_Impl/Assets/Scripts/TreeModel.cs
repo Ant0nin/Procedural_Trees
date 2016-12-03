@@ -10,6 +10,8 @@ public class TreeModel : ScriptableObject
     public List<Vector3> markers;
     public GameObject leafPrefab;
 
+	public TreeModelBehavior TMB;
+
     public void reset()
     {
         boundingBox = new Vector3(5, 5, 5); // default bounding box
@@ -23,4 +25,5 @@ public class TreeModel : ScriptableObject
     {
         reset();
     }
+
 }
