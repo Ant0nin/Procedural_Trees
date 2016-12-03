@@ -40,12 +40,7 @@ public class TreeInspector : Editor
 
         if (mesh)
             tree.boundingBox = mesh.bounds.size;*/
-
-        tree.boundingBox = EditorGUILayout.Vector3Field("Bounding box", tree.boundingBox);
-        pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
-
-        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
-
+            
         display_boundingBox = EditorGUILayout.Toggle("Show bounds", display_boundingBox);
         display_markers = EditorGUILayout.Toggle("Show markers", display_markers);
         display_skeleton = EditorGUILayout.Toggle("Show skeleton", display_skeleton);
@@ -53,14 +48,30 @@ public class TreeInspector : Editor
         display_texture = EditorGUILayout.Toggle("Show textures", display_texture);
 
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
+        tree.boundingBox = EditorGUILayout.Vector3Field("Bounding box", tree.boundingBox);
+        pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
 
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
         step_ms.nb_markers = EditorGUILayout.IntSlider("Number of markers", step_ms.nb_markers, TreeGeneratorMS.NB_MARKERS_MIN, TreeGeneratorMS.NB_MARKERS_MAX);
-        //step_sc.theta = EditorGUILayout.Slider("theta", step_sc.theta, step_sc.THETA_MIN, step_sc.THETA_MAX);
-        //step_sc.r = EditorGUILayout.Slider("r", step_sc.r, step_sc.R_MIN, step_sc.R_MAX);
-        //step_sc.phi = EditorGUILayout.Slider("phi", step_sc.phi, pl.step_sc.PHI_MIN, pl.step_sc.PHI_MAX);
 
-        // ...
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
+        step_sc.theta_rad = EditorGUILayout.Slider("theta_rad", step_sc.theta_rad, TreeGeneratorSC.THETA_MIN, TreeGeneratorSC.THETA_MAX);
+        step_sc.r = EditorGUILayout.Slider("r", step_sc.r, TreeGeneratorSC.R_MIN, TreeGeneratorSC.R_MAX);
+        step_sc.phi = EditorGUILayout.Slider("phi", step_sc.phi, TreeGeneratorSC.PHI_MIN, TreeGeneratorSC.PHI_MAX);
 
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
+        step_bh.lambda = EditorGUILayout.Slider("lambda", step_bh.lambda, TreeGeneratorBH.LAMBDA_MIN, TreeGeneratorBH.LAMBDA_MAX);
+        step_bh.alpha = EditorGUILayout.Slider("alpha", step_bh.alpha, TreeGeneratorBH.ALPHA_MIN, TreeGeneratorBH.ALPHA_MAX);
+        step_bh.Q_leaf = EditorGUILayout.Slider("Q", step_bh.Q_leaf, TreeGeneratorBH.Q_MIN, TreeGeneratorBH.Q_MAX);
+
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
+        step_sa.epsilon = EditorGUILayout.Slider("epsilon", step_sa.epsilon, TreeGeneratorSA.EPSILON_MIN, TreeGeneratorSA.EPSILON_MAX);
+        step_sa.eta = EditorGUILayout.Slider("eta", step_sa.eta, TreeGeneratorSA.ETA_MIN, TreeGeneratorSA.ETA_MAX);
+
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
+        step_bw.initialDiameter = EditorGUILayout.Slider("initial diameter", step_bw.initialDiameter, TreeGeneratorBW.INITIAL_DIAMETER_MIN, TreeGeneratorBW.INITIAL_DIAMETER_MAX);
+        step_bw.n = EditorGUILayout.Slider("n", step_bw.n, TreeGeneratorBW.N_MIN, TreeGeneratorBW.N_MAX);
+        
         if (GUILayout.Button("Generate tree")) {
             OnButtonClick();
         }
