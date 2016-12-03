@@ -5,35 +5,35 @@ using System.Collections.Generic;
 
 public class TreeGeneratorSC : TreePipelineComponent
 {
-    public const float THETA_MIN = 60;
-    public const float THETA_MAX = 120;
+    public const float THETA_MIN = 0.5f;
+    public const float THETA_MAX = 3.14f;
     public const float R_MIN = 4;
     public const float R_MAX = 6;
-    public const float PHI_MIN = 1.9f;
-    public const float PHI_MAX = 2.1f;
+    public const float PHI_MIN = 0f;
+    public const float PHI_MAX = 3f;
 
-    public float r;
-    public float phi;
-    private float theta_rad; // radian
-    private float cos_theta;
+    public float r = 1.0f;
+    public float phi = 0.25f;
+    public float theta_rad = 0.8f; // radian
+    //private float cos_theta;
 
-    public float theta // degree
+    /*public float theta // degree
     {
         get { return (float)(180 * theta_rad / Math.PI); }
         set {
             theta_rad = (float)(Math.PI * value*0.5f / 180f);
             cos_theta = (float)Math.Cos(theta_rad);
         }
-    }
+    }*/
 
     public TreeGeneratorSC() {
-        theta = 100f;
-        r = 1.0f;
-        phi = 0.25f;
+        //theta = 100f;
     }
 
     public void execute(ref TreeModel tree)
     {
+        float cos_theta = (float)Math.Cos(theta_rad);
+
         foreach (Node<Bud> node in tree.skeleton.leaves)
         {
             Bud bud = node.value;

@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 public class TreeGeneratorBH : TreePipelineComponent
 {
+    public const float LAMBDA_MIN = 0.5f;
+    public const float LAMBDA_MAX = 3f;
+    public const float ALPHA_MIN = 0.5f;
+    public const float ALPHA_MAX = 3f;
+    public const float Q_MIN = 1;
+    public const float Q_MAX = 5;
+
     public float lambda = 0.5f;
     public float alpha = 2f;
     public float Q_leaf = 1;
