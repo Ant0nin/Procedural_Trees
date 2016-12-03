@@ -10,7 +10,7 @@ public class TreeGeneratorBW : TreePipelineComponent
     public const float N_MIN = 0.5f;
     public const float N_MAX = 3f;
 
-    public float n = 2f;
+    public float n = 0.02f;
     public float initialDiameter = 1f;
 
     public void execute(ref TreeModel tree)

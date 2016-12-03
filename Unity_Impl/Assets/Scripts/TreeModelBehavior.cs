@@ -120,11 +120,12 @@ public class TreeModelBehavior : MonoBehaviour
 
 		Quaternion rot = Quaternion.FromToRotation(this.transform.up, V);
 
-		GameObject branch = GameObject.CreatePrimitive (PrimitiveType.Capsule);
+		GameObject branch = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
 		branch.transform.position = (position_start + position_end) / 2.0f;
-		branch.transform.localScale = new Vector3 (0.1f, V.magnitude / 2 , 0.1f);
+		branch.transform.localScale = new Vector3 (node.value.branchWidth / 10.0f, V.magnitude / 2 , node.value.branchWidth / 10.0f);
 		branch.transform.rotation = rot;
 		branch.transform.parent = tree.gameObject.transform;
+		branch.name = "Branch";
 	}
 #endif
 }
