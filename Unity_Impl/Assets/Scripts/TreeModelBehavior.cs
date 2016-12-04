@@ -7,14 +7,22 @@ public class TreeModelBehavior : MonoBehaviour
     public TreeModel treeModel;
 
 #if UNITY_EDITOR
+
     void OnDrawGizmos()
     {
-		treeModel.TMB = this;
-	
         drawMarkers();
         drawSkeleton();
         drawBoundingBox();
+        //drawPoints();
     }
+
+    // TODO : test
+    /*void drawPoints()
+    {
+        Gizmos.color = Color.red;
+        foreach (Vector3 pt in treeModel.vertices)
+            Gizmos.DrawSphere(transform.position + pt, 0.05f);
+    }*/
 
     void drawMarkers()
     {
@@ -63,6 +71,9 @@ public class TreeModelBehavior : MonoBehaviour
         Gizmos.color = Color.cyan;
         TreeStructure<Bud> skeleton = treeModel.skeleton;
 
+        if (skeleton == null)
+            return;
+
         for (int i = 1; i < skeleton.levels.Count; i++) // la root est exclue car i initialisé à 1
         {
             List<Node<Bud>> list = skeleton.levels[i];
@@ -86,46 +97,5 @@ public class TreeModelBehavior : MonoBehaviour
 
         Gizmos.DrawLine(position_start, position_end);
     }
-
-	public void makeBody(){
-		TreeStructure<Bud> skeleton = treeModel.skeleton;
-		Transform t = this.transform.Find ("mesh");
-
-		if (t != null)
-			DestroyImmediate (t.gameObject);
-		
-		GameObject treeMesh = new GameObject();
-		//treeMesh = new GameObject();
-		treeMesh.transform.parent = this.gameObject.transform;
-		treeMesh.name = "mesh";
-
-		for (int i = 1; i < skeleton.levels.Count; i++) // la root est exclue car i initialisé à 1
-		{
-			List<Node<Bud>> list = skeleton.levels[i];
-			for (int j = 0; j < list.Count; j++)
-			{
-				Node<Bud> node = list[j];
-				makeBranch(node, treeMesh);
-			}
-		}
-	}
-
-	void makeBranch(Node<Bud> node, GameObject tree){
-		Vector3 startPos = node.value.pos;
-		Vector3 endPos = node.parent.value.pos;
-
-		Vector3 position_start = startPos + transform.position;
-		Vector3 position_end = endPos + transform.position;
-		Vector3 V = position_end - position_start; 
-
-		Quaternion rot = Quaternion.FromToRotation(this.transform.up, V);
-
-		GameObject branch = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
-		branch.transform.position = (position_start + position_end) / 2.0f;
-		branch.transform.localScale = new Vector3 (node.value.branchWidth / 10.0f, V.magnitude / 2 , node.value.branchWidth / 10.0f);
-		branch.transform.rotation = rot;
-		branch.transform.parent = tree.gameObject.transform;
-		branch.name = "Branch";
-	}
 #endif
 }

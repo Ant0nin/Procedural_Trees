@@ -19,6 +19,7 @@ public class TreeInspector : Editor
     TreeGeneratorBH step_bh = null;
     TreeGeneratorSA step_sa = null;
     TreeGeneratorBW step_bw = null;
+    TreeGeneratorMG step_mg = null;
 
     public void OnEnable()
     {
@@ -27,8 +28,9 @@ public class TreeInspector : Editor
         step_bh = new TreeGeneratorBH();
         step_sa = new TreeGeneratorSA();
         step_bw = new TreeGeneratorBW();
+        step_mg = new TreeGeneratorMG();
         pl = new TreeGeneratorPipeline(
-            step_ms, step_sc, step_bh, step_sa, step_bw
+            step_sc, step_bh, step_sa, step_bw
         );
     }
 
@@ -41,13 +43,13 @@ public class TreeInspector : Editor
         if (mesh)
             tree.boundingBox = mesh.bounds.size;*/
             
-        display_boundingBox = EditorGUILayout.Toggle("Show bounds", display_boundingBox);
+        /*display_boundingBox = EditorGUILayout.Toggle("Show bounds", display_boundingBox);
         display_markers = EditorGUILayout.Toggle("Show markers", display_markers);
         display_skeleton = EditorGUILayout.Toggle("Show skeleton", display_skeleton);
         display_leaves = EditorGUILayout.Toggle("Show leaves", display_leaves);
         display_texture = EditorGUILayout.Toggle("Show textures", display_texture);
 
-        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---*/
         tree.boundingBox = EditorGUILayout.Vector3Field("Bounding box", tree.boundingBox);
         pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
 
@@ -105,28 +107,39 @@ public class TreeInspector : Editor
     {
         SerializedObject s_tree = serializedObject;
         TreeModel tree = (TreeModel)target;
+
+        tree.reset();
+        step_ms.execute(ref tree);
         pl.execute(ref tree);
+        step_mg.execute(ref tree);
+
         s_tree.ApplyModifiedProperties();
 
-        /*GameObject gameObj = mb.gameObject;
-        MeshFilter meshFilter = gameObj.GetComponent<MeshFilter>();
-        MeshRenderer meshRenderer = gameObj.GetComponent<MeshRenderer>();
+        string outputFilename = "Assets/Meshes/tree_mesh_01.asset"; // TODO : dynamic path
+        AssetDatabase.CreateAsset(tree.mesh, outputFilename);
 
-        // reset -------
-        if(!meshFilter)
-            meshFilter = gameObj.AddComponent<MeshFilter>();
-        /*else if (meshFilter && meshFilter.sharedMesh)
-            DestroyImmediate(meshFilter.sharedMesh, true);*/
+        TreeModelBehavior[] all_tmb = (TreeModelBehavior[])GameObject.FindObjectsOfType(typeof(TreeModelBehavior));
+        foreach(TreeModelBehavior tmb in all_tmb)
+        {
+            GameObject gameObj = tmb.gameObject;
+            if(tmb.treeModel == tree)
+            {
+                MeshFilter meshFilter = gameObj.GetComponent<MeshFilter>();
+                MeshRenderer meshRenderer = gameObj.GetComponent<MeshRenderer>();
 
-        /*if (!meshRenderer)
-            meshRenderer = gameObj.AddComponent<MeshRenderer>();
-        // TODO : remove leaves into the scene (child gameobjects)
-        // -------------
+                // reset -------
+                if (!meshFilter)
+                    meshFilter = gameObj.AddComponent<MeshFilter>();
+                else if (meshFilter && meshFilter.sharedMesh)
+                    DestroyImmediate(meshFilter.sharedMesh, true);
 
-        Mesh outputMesh = pl.execute(tree);
-
-        string outputFilename = "Assets/Resources/TreeData/tree_data_01.asset"; // TODO : dynamic path
-        AssetDatabase.CreateAsset(tree, outputFilename);
-        //meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(outputFilename);*/
+                if (!meshRenderer)
+                    meshRenderer = gameObj.AddComponent<MeshRenderer>();
+                // TODO : remove leaves into the scene (child gameobjects)
+                // -------------
+                
+                meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(outputFilename);
+            }
+        }
     }
 }

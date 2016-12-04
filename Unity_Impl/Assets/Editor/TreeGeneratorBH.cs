@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class TreeGeneratorBH : TreePipelineComponent
 {
-    public const float LAMBDA_MIN = 0.5f;
-    public const float LAMBDA_MAX = 3f;
+    public const float LAMBDA_MIN = 0f;
+    public const float LAMBDA_MAX = 1f;
     public const float ALPHA_MIN = 0.5f;
     public const float ALPHA_MAX = 3f;
     public const float Q_MIN = 1;

@@ -9,8 +9,7 @@ public class TreeModel : ScriptableObject
     public TreeStructure<Bud> skeleton;
     public List<Vector3> markers;
     public GameObject leafPrefab;
-
-	public TreeModelBehavior TMB;
+    public Mesh mesh;
 
     public void reset()
     {
@@ -23,7 +22,7 @@ public class TreeModel : ScriptableObject
 
     public void OnEnable()
     {
-        reset();
+        //reset();
     }
 
 }
