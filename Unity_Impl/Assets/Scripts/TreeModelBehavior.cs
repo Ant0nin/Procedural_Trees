@@ -10,13 +10,15 @@ public class TreeModelBehavior : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        drawNodeCircles(Color.red);
+        drawNodeCircles(Color.red, false);
+        drawNodeCircles(Color.magenta, true);
+
         drawMarkers(Color.yellow);
         drawSkeleton(Color.cyan);
         drawBoundingBox(Color.blue);
     }
     
-    void drawNodeCircles(Color c)
+    void drawNodeCircles(Color c, bool lateralMode)
     {
         Gizmos.color = c;
 
@@ -27,18 +29,25 @@ public class TreeModelBehavior : MonoBehaviour
                 foreach (Node<Bud> node in level)
                 {
                     Bud bud = node.value;
-                    if (bud.mainVertices != null)
+
+                    List<Vector3> vertices = null;
+                    if (lateralMode)
+                        vertices = bud.lateralVertices;
+                    else
+                        vertices = bud.mainVertices;
+
+                    if (vertices != null)
                     {
                         Vector3 position_start, position_end;
                         position_start = position_end = new Vector3();
-                        for (int i = 1; i < bud.mainVertices.Count; i++)
+                        for (int i = 1; i < vertices.Count; i++)
                         {
-                            position_start = transform.position + bud.mainVertices[i - 1];
-                            position_end = transform.position + bud.mainVertices[i];
+                            position_start = transform.position + vertices[i - 1];
+                            position_end = transform.position + vertices[i];
                             Gizmos.DrawLine(position_start, position_end);
                         }
-                        position_start = transform.position + bud.mainVertices[bud.mainVertices.Count - 1];
-                        position_end = transform.position + bud.mainVertices[0];
+                        position_start = transform.position + vertices[vertices.Count - 1];
+                        position_end = transform.position + vertices[0];
                         Gizmos.DrawLine(position_start, position_end);
                     }
                 }

@@ -57,22 +57,28 @@ public class TreeGeneratorMG : TreePipelineComponent
             for(int i=0; i<l.Count; i++)
             {
                 Node<Bud> node = l[i];
-                circleSampling(ref node);
+                circleSampling(ref node, true); // main axis
+                circleSampling(ref node, false); // lateral branchs
+
             }
         }
 
+        /*Node<Bud> node = tree.skeleton.root;
+        circleSampling(ref node, false); // main
+        //circleSampling(ref node, true);*/
+        
         return null; // TODO
     }
 
-    void circleSampling(ref Node<Bud> node)
+    void circleSampling(ref Node<Bud> node, bool lateralMode)
     {
         Bud currentBud = node.value;
         
         Vector3 axis = Vector3.up;
         if (!node.isRoot())
         {
-            if (currentBud.isNewAxis)
-                axis = node.parent.value.lateralDir;
+            if (lateralMode && currentBud.lateralDir != null)
+                axis = currentBud.lateralDir;
             else
             {
                 Vector3 previousBudPos = node.parent.value.pos;
@@ -88,8 +94,14 @@ public class TreeGeneratorMG : TreePipelineComponent
         float stepAngle = 360f / (float)subdivision_qty;
         Vector3 normale = side;
 
-        currentBud.mainVertices = new List<Vector3>();
-        currentBud.mainNormales = new List<Vector3>();
+        if(lateralMode) {
+            currentBud.lateralVertices = new List<Vector3>();
+            currentBud.lateralNormales = new List<Vector3>();
+        }
+        else {
+            currentBud.mainVertices = new List<Vector3>();
+            currentBud.mainNormales = new List<Vector3>();
+        }
 
         for (int i = 0; i < subdivision_qty; i++)
         {
@@ -98,8 +110,16 @@ public class TreeGeneratorMG : TreePipelineComponent
             normale = Quaternion.AngleAxis(stepAngle, axis) * normale;//* side;
             Vector3 pt = budPos + normale * node.value.branchWidth;
 
-            currentBud.mainVertices.Add(pt);
-            currentBud.mainNormales.Add(normale);
+            if(lateralMode)
+            {
+                currentBud.lateralVertices.Add(pt);
+                currentBud.lateralNormales.Add(normale);
+            }
+            else
+            {
+                currentBud.mainVertices.Add(pt);
+                currentBud.mainNormales.Add(normale);
+            }
         }
     }
 }
