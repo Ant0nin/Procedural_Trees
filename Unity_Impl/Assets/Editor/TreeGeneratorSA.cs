@@ -45,7 +45,6 @@ public class TreeGeneratorSA : TreePipelineComponent
 
         currentBud.lateralDir = Vector3.Normalize(eta * tropismVec + epsilon * currentBud.optimalGrowth + (1-eta-epsilon) * currentBud.dir);
         Vector3 newLateralBudPosition = currentBud.pos + currentBud.lateralDir * internodeLength;
-         
 
         Bud newLateralBud = new Bud(newLateralBudPosition, true);
         Node<Bud> newLateralNode = new Node<Bud>(ref skeleton, currentNode, newLateralBud);

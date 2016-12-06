@@ -67,21 +67,26 @@ public class TreeGeneratorMG : TreePipelineComponent
     void circleSampling(ref Node<Bud> node)
     {
         Bud currentBud = node.value;
+        
+        Vector3 axis = Vector3.up;
+        if (!node.isRoot())
+        {
+            if (currentBud.isNewAxis)
+                axis = node.parent.value.lateralDir;
+            else
+            {
+                Vector3 previousBudPos = node.parent.value.pos;
+                Vector3 currentBudPos = currentBud.pos;
+                axis = Vector3.Normalize(previousBudPos - currentBudPos);
+            }
+        }
 
-        //Vector3 side = new Vector3();
-        /*if (node.isRoot())
-            side = Vector3.left;
-        else if (currentBud.isNewAxis)
-            side = node.parent.value.lateralDir;
-        else
-            side = node.parent.value.dir;*/
-        Vector3 side = Vector3.left;
+        Vector3 side = Quaternion.Euler(90, 0, 90) * axis;
 
-        Vector3 axis = node.value.dir;
-        Vector3 dir = Vector3.Cross(side, axis);
         Vector3 budPos = currentBud.pos;
         float angle = 0f;
         float stepAngle = 360f / (float)subdivision_qty;
+        Vector3 normale = side;
 
         currentBud.mainVertices = new List<Vector3>();
         currentBud.mainNormales = new List<Vector3>();
@@ -89,7 +94,8 @@ public class TreeGeneratorMG : TreePipelineComponent
         for (int i = 0; i < subdivision_qty; i++)
         {
             angle += stepAngle;
-            Vector3 normale = Quaternion.Euler(0, angle, 0) * dir;
+            //Quaternion lookRotation = Quaternion.LookRotation(Vector3.left);
+            normale = Quaternion.AngleAxis(stepAngle, axis) * normale;//* side;
             Vector3 pt = budPos + normale * node.value.branchWidth;
 
             currentBud.mainVertices.Add(pt);
