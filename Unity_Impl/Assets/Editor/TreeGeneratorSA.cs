@@ -22,7 +22,7 @@ public class TreeGeneratorSA : TreePipelineComponent
         {
             Node<Bud> node = leaves[i];
             Bud bud = node.value;
-
+            
             switch (bud.state)
             {
                 case BudState.NEW_METAMER:

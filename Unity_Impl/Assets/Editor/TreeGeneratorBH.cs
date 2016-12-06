@@ -9,12 +9,12 @@ public class TreeGeneratorBH : TreePipelineComponent
     public const float LAMBDA_MAX = 1f;
     public const float ALPHA_MIN = 0.5f;
     public const float ALPHA_MAX = 3f;
-    public const float Q_MIN = 1;
-    public const float Q_MAX = 5;
+    public const float Q_MIN = 1f;
+    public const float Q_MAX = 5f;
 
     public float lambda = 0.5f;
     public float alpha = 2f;
-    public float Q_leaf = 1;
+    public float Q_leaf = 1f;
 
     // Evalue la lumière recue pour un bourgeon de l'arbre
     private void evaluateLight(ref Node<Bud> N)
