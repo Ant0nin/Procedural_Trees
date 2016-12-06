@@ -73,7 +73,10 @@ public class TreeInspector : Editor
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
         step_bw.initialDiameter = EditorGUILayout.Slider("initial diameter", step_bw.initialDiameter, TreeGeneratorBW.INITIAL_DIAMETER_MIN, TreeGeneratorBW.INITIAL_DIAMETER_MAX);
         step_bw.n = EditorGUILayout.Slider("n", step_bw.n, TreeGeneratorBW.N_MIN, TreeGeneratorBW.N_MAX);
-        
+
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
+        step_mg.subdivision_qty = EditorGUILayout.IntSlider("mesh subdivisions", step_mg.subdivision_qty, TreeGeneratorMG.SUBDIVISION_MIN, TreeGeneratorMG.SUBDIVISION_MAX);
+
         if (GUILayout.Button("Generate tree")) {
             OnButtonClick();
         }

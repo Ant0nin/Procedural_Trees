@@ -10,32 +10,55 @@ public class TreeModelBehavior : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        drawMarkers();
-        drawSkeleton();
-        drawBoundingBox();
-        //drawPoints();
+        drawNodeCircles(Color.red);
+        drawMarkers(Color.yellow);
+        drawSkeleton(Color.cyan);
+        drawBoundingBox(Color.blue);
+    }
+    
+    void drawNodeCircles(Color c)
+    {
+        Gizmos.color = c;
+
+        if (treeModel.skeleton != null)
+        {
+            foreach (List<Node<Bud>> level in treeModel.skeleton.levels)
+            {
+                foreach (Node<Bud> node in level)
+                {
+                    Bud bud = node.value;
+                    if (bud.mainVertices != null)
+                    {
+                        Vector3 position_start, position_end;
+                        position_start = position_end = new Vector3();
+                        for (int i = 1; i < bud.mainVertices.Count; i++)
+                        {
+                            position_start = transform.position + bud.mainVertices[i - 1];
+                            position_end = transform.position + bud.mainVertices[i];
+                            Gizmos.DrawLine(position_start, position_end);
+                        }
+                        position_start = transform.position + bud.mainVertices[bud.mainVertices.Count - 1];
+                        position_end = transform.position + bud.mainVertices[0];
+                        Gizmos.DrawLine(position_start, position_end);
+                    }
+                }
+            }
+        }
+
     }
 
-    // TODO : test
-    /*void drawPoints()
+    void drawMarkers(Color c)
     {
-        Gizmos.color = Color.red;
-        foreach (Vector3 pt in treeModel.vertices)
-            Gizmos.DrawSphere(transform.position + pt, 0.05f);
-    }*/
-
-    void drawMarkers()
-    {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = c;
         foreach (Vector3 marker in treeModel.markers)
         {
             Gizmos.DrawSphere(transform.position + marker, 0.02f);
         }
     }
 
-    void drawBoundingBox()
+    void drawBoundingBox(Color c)
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = c;
         
         Vector3 pos = transform.position;
         Vector3 box = pos + treeModel.boundingBox;
@@ -66,9 +89,9 @@ public class TreeModelBehavior : MonoBehaviour
         Gizmos.DrawLine(front_bottom_right, back_bottom_right);
     }
 
-    void drawSkeleton()
+    void drawSkeleton(Color c)
     {
-        Gizmos.color = Color.cyan;
+        Gizmos.color = c;
         TreeStructure<Bud> skeleton = treeModel.skeleton;
 
         if (skeleton == null)
