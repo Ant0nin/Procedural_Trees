@@ -6,8 +6,8 @@ using System.Collections.Generic;
 public class TreeGeneratorMG : TreePipelineComponent
 {
     public const int SUBDIVISION_MIN = 5;
-    public const int SUBDIVISION_MAX = 30;
-    public int subdivision_qty = 15;
+    public const int SUBDIVISION_MAX = 10;
+    public int subdivision_qty = 8;
 
     public TreeGeneratorMG() { }
 
@@ -106,20 +106,24 @@ public class TreeGeneratorMG : TreePipelineComponent
         List<Vector3> targetVertices = null;
         List<Vector3> targetNormales = null;
 
-        if (lateralMode && src.lateral != null) {
+        if (lateralMode && src.lateral != null)
+        {
             target = src.lateral;
             srcVertices = src.value.lateralVertices;
             srcNormales = src.value.lateralNormales;
             targetVertices = target.value.lateralVertices;
             targetNormales = target.value.lateralNormales;
         }
-        else {
+        else if (src.main != null)
+        {
             target = src.main;
             srcVertices = src.value.mainVertices;
             srcNormales = src.value.mainNormales;
             targetVertices = target.value.mainVertices;
             targetNormales = target.value.mainNormales;
         }
+        else
+            return;
 
         for(int i=0; i<srcVertices.Count; i++)
         {

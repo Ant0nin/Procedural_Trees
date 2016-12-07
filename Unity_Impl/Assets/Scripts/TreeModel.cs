@@ -10,19 +10,4 @@ public class TreeModel : ScriptableObject
     public List<Vector3> markers;
     public GameObject leafPrefab;
     public Mesh mesh;
-
-    public void reset()
-    {
-        boundingBox = new Vector3(5, 5, 5); // default bounding box
-        Vector3 budPosition = new Vector3(boundingBox.x / 2, 0, boundingBox.z / 2); // default seed position => bottom
-        Bud bud = new Bud(budPosition, true);
-        Node<Bud> root = new Node<Bud>(bud);
-        skeleton = new TreeStructure<Bud>(root);
-    }
-
-    public void OnEnable()
-    {
-        //reset();
-    }
-
 }

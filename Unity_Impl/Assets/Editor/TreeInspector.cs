@@ -36,21 +36,7 @@ public class TreeInspector : Editor
 
     public override void OnInspectorGUI()
     {
-        TreeModel tree = (TreeModel)target;
-        /*GameObject gameObj = mb.gameObject;
-        Mesh mesh = mb.GetComponent<Mesh>();
-
-        if (mesh)
-            tree.boundingBox = mesh.bounds.size;*/
-            
-        /*display_boundingBox = EditorGUILayout.Toggle("Show bounds", display_boundingBox);
-        display_markers = EditorGUILayout.Toggle("Show markers", display_markers);
-        display_skeleton = EditorGUILayout.Toggle("Show skeleton", display_skeleton);
-        display_leaves = EditorGUILayout.Toggle("Show leaves", display_leaves);
-        display_texture = EditorGUILayout.Toggle("Show textures", display_texture);
-
-        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---*/
-        tree.boundingBox = EditorGUILayout.Vector3Field("Bounding box", tree.boundingBox);
+        step_ms.boundingBox = EditorGUILayout.Vector3Field("Bounding box", step_ms.boundingBox);
         pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
 
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
@@ -81,37 +67,12 @@ public class TreeInspector : Editor
             OnButtonClick();
         }
     }
-    
-    public void OnSceneGUI()
-    {
-        /*TreeModel tree = (TreeModel)target;
-
-        foreach (Vector3 marker in tree.markers)
-            Gizmos.DrawSphere(marker, 0.1f);*/
-
-        /*if (display_leaves) {
-            // ...
-        }
-        if (display_texture) {
-            // ...
-        }
-        if (display_boundingBox) {
-            // ...
-        }
-        if (display_markers) {
-            // ...
-        }
-        if (display_skeleton) {
-            // ...
-        }*/
-    }
 
     public void OnButtonClick()
     {
         SerializedObject s_tree = serializedObject;
         TreeModel tree = (TreeModel)target;
 
-        tree.reset();
         step_ms.execute(ref tree);
         pl.execute(ref tree);
         step_mg.execute(ref tree);
