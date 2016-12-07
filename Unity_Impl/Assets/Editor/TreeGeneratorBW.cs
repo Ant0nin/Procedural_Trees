@@ -6,12 +6,12 @@ using System.Collections.Generic;
 public class TreeGeneratorBW : TreePipelineComponent
 {
     public const float INITIAL_DIAMETER_MIN = 0.001f;
-    public const float INITIAL_DIAMETER_MAX = 2f;
-    public const float N_MIN = 0.001f;
-    public const float N_MAX = 1f;
+    public const float INITIAL_DIAMETER_MAX = 0.003f;
+    public const float N_MIN = 0.980f;
+    public const float N_MAX = 1.020f;
 
-    public float n = 0.9f;
-    public float initialDiameter = 0.001f;
+    public float n = 0.99f;
+    public float initialDiameter = 0.002f;
 
     public void execute(ref TreeModel tree)
     {

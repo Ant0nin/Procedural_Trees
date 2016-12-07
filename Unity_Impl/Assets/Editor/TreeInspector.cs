@@ -12,7 +12,7 @@ public class TreeInspector : Editor
     bool display_skeleton;
     bool display_leaves;
     bool display_texture;
-
+    
     TreeGeneratorPipeline pl = null;
     TreeGeneratorMS step_ms = null;
     TreeGeneratorSC step_sc = null;
@@ -36,6 +36,9 @@ public class TreeInspector : Editor
 
     public override void OnInspectorGUI()
     {
+        TreeModel tree = target as TreeModel;
+
+        EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
         step_ms.boundingBox = EditorGUILayout.Vector3Field("Bounding box", step_ms.boundingBox);
         pl.nb_it = EditorGUILayout.IntSlider("Number of iterations", pl.nb_it, TreeGeneratorPipeline.NB_IT_MIN, TreeGeneratorPipeline.NB_IT_MAX);
 
@@ -50,7 +53,7 @@ public class TreeInspector : Editor
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
         step_bh.lambda = EditorGUILayout.Slider("lambda", step_bh.lambda, TreeGeneratorBH.LAMBDA_MIN, TreeGeneratorBH.LAMBDA_MAX);
         step_bh.alpha = EditorGUILayout.Slider("alpha", step_bh.alpha, TreeGeneratorBH.ALPHA_MIN, TreeGeneratorBH.ALPHA_MAX);
-        step_bh.Q_leaf = EditorGUILayout.Slider("Q", step_bh.Q_leaf, TreeGeneratorBH.Q_MIN, TreeGeneratorBH.Q_MAX);
+        //step_bh.Q_leaf = EditorGUILayout.Slider("Q", step_bh.Q_leaf, TreeGeneratorBH.Q_MIN, TreeGeneratorBH.Q_MAX);
 
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
         step_sa.epsilon = EditorGUILayout.Slider("epsilon", step_sa.epsilon, TreeGeneratorSA.EPSILON_MIN, TreeGeneratorSA.EPSILON_MAX);
@@ -62,6 +65,7 @@ public class TreeInspector : Editor
 
         EditorGUILayout.TextArea("", GUI.skin.horizontalSlider); // ---
         step_mg.subdivision_qty = EditorGUILayout.IntSlider("mesh subdivisions", step_mg.subdivision_qty, TreeGeneratorMG.SUBDIVISION_MIN, TreeGeneratorMG.SUBDIVISION_MAX);
+        tree.mesh_file_name = EditorGUILayout.TextField("mesh file name", tree.mesh_file_name);
 
         if (GUILayout.Button("Generate tree")) {
             OnButtonClick();
@@ -79,7 +83,7 @@ public class TreeInspector : Editor
 
         s_tree.ApplyModifiedProperties();
 
-        string outputFilename = "Assets/Meshes/tree_mesh_01.asset"; // TODO : dynamic path
+        string outputFilename = "Assets/Meshes/"+tree.mesh_file_name+".asset";
         AssetDatabase.CreateAsset(tree.mesh, outputFilename);
 
         TreeModelBehavior[] all_tmb = (TreeModelBehavior[])GameObject.FindObjectsOfType(typeof(TreeModelBehavior));

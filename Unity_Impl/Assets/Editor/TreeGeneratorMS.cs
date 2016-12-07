@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 public class TreeGeneratorMS : TreePipelineComponent
 {
-    public int nb_markers = 250;
-    public Vector3 boundingBox = new Vector3(10f, 15f, 10f);
+    public int nb_markers = 75;
+    public Vector3 boundingBox = new Vector3(10f, 10f, 10f);
     public const int NB_MARKERS_MIN = 10;
-    public const int NB_MARKERS_MAX = 500;
+    public const int NB_MARKERS_MAX = 300;
 
     public void execute(ref TreeModel tree)
     {
