@@ -11,11 +11,11 @@ public class TreeModelBehavior : MonoBehaviour
     void OnDrawGizmos()
     {
         drawNodeCircles(Color.red, false); // for main axis
-        //drawNodeCircles(Color.magenta, true); // for lateral branchs
+        drawNodeCircles(Color.magenta, true); // for lateral branchs
 
-        //drawMarkers(Color.yellow);
+        drawMarkers(Color.yellow);
         drawSkeleton(Color.cyan);
-        //drawBoundingBox(Color.blue);
+        drawBoundingBox(Color.blue);
     }
     
     void drawNodeCircles(Color c, bool lateralMode)

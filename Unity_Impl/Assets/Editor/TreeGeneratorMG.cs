@@ -13,10 +13,10 @@ public class TreeGeneratorMG : TreePipelineComponent
 
     public void execute(ref TreeModel tree)
     {
-        generateMesh(ref tree); // TODO
+        tree.mesh = generateMesh(ref tree);
 
         // just a simple test => create a quad : ----
-        Mesh mesh = new Mesh();
+        /*Mesh mesh = new Mesh();
         Vector3[] vertices = new Vector3[4];
         vertices[0] = new Vector3(0, 0, 0);
         vertices[1] = new Vector3(1, 0, 0);
@@ -47,11 +47,12 @@ public class TreeGeneratorMG : TreePipelineComponent
         uv[3] = new Vector2(1, 1);
         mesh.uv = uv;
 
-        tree.mesh = mesh;
+        tree.mesh = mesh;*/
     }
 
     private Mesh generateMesh(ref TreeModel tree)
     {
+        // Prepare circles foreach node
         foreach (List<Node<Bud>> l in tree.skeleton.levels)
         {
             for(int i=0; i<l.Count; i++)
@@ -59,22 +60,113 @@ public class TreeGeneratorMG : TreePipelineComponent
                 Node<Bud> node = l[i];
                 circleSampling(ref node, true); // main axis
                 circleSampling(ref node, false); // lateral branchs
-
             }
         }
 
-        /*Node<Bud> node = tree.skeleton.root;
-        circleSampling(ref node, false); // main
-        //circleSampling(ref node, true);*/
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
+        List<Vector3> normales = new List<Vector3>();
+        List<Vector2> uv = new List<Vector2>();
+        int countTri = 0;
+
+        // Build strips
+        for(int i = 0; i < (tree.skeleton.levels.Count-1); i++)
+        {
+            List<Node<Bud>> l = tree.skeleton.levels[i];
+            for (int j = 0; j < l.Count; j++)
+            {
+                Node<Bud> node = l[j];
+                buildStrip(ref node, ref vertices, ref triangles, ref normales, ref uv, ref countTri, false); // main axis
+                buildStrip(ref node, ref vertices, ref triangles, ref normales, ref uv, ref countTri, true); // lateral branchs
+            }
+        }
+
+        // Give data to mesh
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.normals = normales.ToArray();
+        mesh.uv = uv.ToArray();
         
-        return null; // TODO
+        return mesh; 
+    }
+    
+    void buildStrip(
+        ref Node<Bud> src, 
+        ref List<Vector3> vertices, 
+        ref List<int> triangles, 
+        ref List<Vector3> normales, 
+        ref List<Vector2> uv, 
+        ref int countTri,
+        bool lateralMode)
+    {
+        Node<Bud> target = null;
+        List<Vector3> srcVertices = null;
+        List<Vector3> srcNormales = null;
+        List<Vector3> targetVertices = null;
+        List<Vector3> targetNormales = null;
+
+        if (lateralMode && src.lateral != null) {
+            target = src.lateral;
+            srcVertices = src.value.lateralVertices;
+            srcNormales = src.value.lateralNormales;
+            targetVertices = target.value.lateralVertices;
+            targetNormales = target.value.lateralNormales;
+        }
+        else {
+            target = src.main;
+            srcVertices = src.value.mainVertices;
+            srcNormales = src.value.mainNormales;
+            targetVertices = target.value.mainVertices;
+            targetNormales = target.value.mainNormales;
+        }
+
+        for(int i=0; i<srcVertices.Count; i++)
+        {
+            int k = (i == 0 ? (srcVertices.Count - 1) : (i - 1));
+
+            Vector3 first_srcPoint = srcVertices[k];
+            Vector3 first_targetPoint = targetVertices[k];
+            Vector3 second_srcPoint = srcVertices[i];
+            Vector3 second_targetPoint = targetVertices[i];
+
+            Vector3 first_srcNormale = srcNormales[k];
+            Vector3 first_targetNormale = targetNormales[k];
+            Vector3 second_srcNormale = srcNormales[i];
+            Vector3 second_targetNormale = targetNormales[i];
+
+            vertices.Add(first_srcPoint);
+            vertices.Add(second_srcPoint);
+            vertices.Add(first_targetPoint);
+            vertices.Add(second_targetPoint);
+
+            normales.Add(first_srcNormale);
+            normales.Add(second_srcNormale);
+            normales.Add(first_targetNormale);
+            normales.Add(second_targetNormale);
+
+            uv.Add(new Vector2(0, 0));
+            uv.Add(new Vector2(1, 0));
+            uv.Add(new Vector2(0, 1));
+            uv.Add(new Vector2(1, 1));
+
+            triangles.Add(countTri + 0);
+            triangles.Add(countTri + 2);
+            triangles.Add(countTri + 1);
+
+            triangles.Add(countTri + 2);
+            triangles.Add(countTri + 3);
+            triangles.Add(countTri + 1);
+
+            countTri +=4;
+        }
     }
 
     void circleSampling(ref Node<Bud> node, bool lateralMode)
     {
         Bud currentBud = node.value;
         
-        Vector3 axis = Vector3.up;
+        Vector3 axis = Vector3.down;
         if (!node.isRoot())
         {
             if (lateralMode && currentBud.lateralDir != null)
